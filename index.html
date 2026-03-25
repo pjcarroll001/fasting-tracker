@@ -225,6 +225,41 @@ function getGoals(){return getStore('ft_goals')||[
 ];}
 function saveGoals(g){setStore('ft_goals',g);}
 
+function normalizeDate(d){
+  // Handle formats: 2026-03-25, 3/25/2026, 25/3/2026, March 25 2026
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+  const parts = d.split(/[\/\-]/);
+  if(parts.length===3){
+    if(parts[0].length===4) return `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
+    return `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
+  }
+  const parsed = new Date(d);
+  if(!isNaN(parsed)) return parsed.toISOString().slice(0,10);
+  return d;
+}
+
+function normalizeTime(t){
+  // Handle formats: 14:20, 14:20:00, 2:20 PM, 14.20
+  t = String(t).trim();
+  if(/^\d{1,2}:\d{2}(:\d{2})?$/.test(t)){
+    const parts=t.split(':');
+    return `${parts[0].padStart(2,'0')}:${parts[1].padStart(2,'0')}`;
+  }
+  if(/^\d{1,2}\.\d{2}$/.test(t)){
+    const parts=t.split('.');
+    return `${parts[0].padStart(2,'0')}:${parts[1].padStart(2,'0')}`;
+  }
+  const pm=/pm/i.test(t);const am=/am/i.test(t);
+  const nums=t.replace(/[^0-9:]/g,'');
+  const np=nums.split(':');
+  if(np.length>=2){
+    let h=parseInt(np[0]);const m=np[1].padStart(2,'0');
+    if(pm&&h<12)h+=12;if(am&&h===12)h=0;
+    return `${String(h).padStart(2,'0')}:${m}`;
+  }
+  return t;
+}
+
 function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
@@ -238,7 +273,12 @@ async function syncFromSheets(){
     const res=await fetch(SCRIPT_URL+'?t='+Date.now());
     const data=await res.json();
     meals=data.filter(r=>r.id&&r.date&&r.time&&r.food)
-      .map(r=>({id:String(r.id),date:String(r.date),time:String(r.time),food:String(r.food)}));
+      .map(r=>({
+        id:String(r.id),
+        date:normalizeDate(String(r.date)),
+        time:normalizeTime(String(r.time)),
+        food:String(r.food)
+      }));
     meals.sort((a,b)=>a.date+a.time>b.date+b.time?1:-1);
     const now=new Date();
     setSyncStatus('synced','Synced · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}));

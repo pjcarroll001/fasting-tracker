@@ -338,7 +338,7 @@
       <div class="chart-wrap"><canvas id="waterChart"></canvas></div>
       <div class="legend">
         <span><span class="leg-dot" style="background:#1a6fc4;"></span>Water (cups)</span>
-        <span><span class="leg-dot" style="background:#7c3aed;"></span>Alcoholic drinks (count)</span>
+        <span><span class="leg-dot" style="background:#7c3aed;"></span>Alcoholic drinks (glasses)</span>
         <span><span class="leg-dot" style="background:#fca5a5;border:1px dashed #ef4444;"></span>Water goal (10 cups)</span>
       </div>
     </div>
@@ -564,7 +564,7 @@ function renderWaterChart(){
             title:(items)=>labels[items[0].dataIndex]||'',
             label:(ctx)=>{
               if(ctx.dataset.label==='Water (cups)') return` Water: ${ctx.parsed.y} cups (${Math.round(ctx.parsed.y*8)} oz)`;
-              if(ctx.dataset.label==='Alcoholic drinks') return` Drinks: ${ctx.parsed.y}`;
+              if(ctx.dataset.label==='Alcoholic drinks') return` Glasses: ${ctx.parsed.y}`;
               return` Water goal: 10 cups`;
             }
           }
@@ -573,7 +573,7 @@ function renderWaterChart(){
       scales:{
         x:{ticks:{font:{size:10,family:'sans-serif'},color:'#4a7a9b',maxRotation:50},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
         y:{position:'left',min:0,title:{display:true,text:'Water (cups)',font:{size:10},color:'#1a6fc4'},ticks:{stepSize:2,callback:(v)=>v+' cups',font:{size:10,family:'sans-serif'},color:'#1a6fc4'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
-        y2:{position:'right',min:0,title:{display:true,text:'Drinks',font:{size:10},color:'#7c3aed'},ticks:{stepSize:1,callback:(v)=>v,font:{size:10,family:'sans-serif'},color:'#7c3aed'},grid:{display:false},border:{color:'#b8d9f0'}}
+        y2:{position:'right',min:0,title:{display:true,text:'Glasses',font:{size:10},color:'#7c3aed'},ticks:{stepSize:1,callback:(v)=>v,font:{size:10,family:'sans-serif'},color:'#7c3aed'},grid:{display:false},border:{color:'#b8d9f0'}}
       }
     }
   });

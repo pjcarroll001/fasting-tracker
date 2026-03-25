@@ -196,6 +196,19 @@
       </div>
     </div>
 
+    <div class="card">
+      <div class="card-title">Log a meal</div>
+      <div class="form-row">
+        <div class="form-group"><label>Time</label><input type="time" id="meal-time" /></div>
+        <div class="form-group"><label>Date</label><input type="date" id="meal-date" /></div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>Food description</label>
+        <textarea id="meal-food" placeholder="e.g. Grilled salmon, roasted vegetables, sparkling water..."></textarea>
+      </div>
+      <button class="btn" onclick="logMeal()" id="log-btn">+ Add entry</button>
+    </div>
+
     <!-- WATER QUICK LOG -->
     <div class="water-card">
       <div class="card-title">Water intake · today</div>
@@ -211,26 +224,19 @@
         <button class="btn-water-reset" onclick="resetWater()">Reset</button>
       </div>
       <div style="margin-top:14px;">
-        <div class="form-group" style="margin-bottom:12px;">
-          <label>Custom amount (cups)</label>
-          <input type="number" id="water-custom" min="0.5" max="25" step="0.5" placeholder="e.g. 2" />
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:12px;">
+            <label>Custom amount (cups)</label>
+            <input type="number" id="water-custom" min="0.5" max="25" step="0.5" placeholder="e.g. 2" />
+          </div>
+          <div class="form-group" style="margin-bottom:12px;">
+            <label>Date</label>
+            <input type="date" id="water-date" />
+          </div>
         </div>
         <button class="btn" onclick="addCustomWater()">+ Add entry</button>
       </div>
       <div class="water-complete" id="water-complete">Goal reached! Great work today!</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Log a meal</div>
-      <div class="form-row">
-        <div class="form-group"><label>Time</label><input type="time" id="meal-time" /></div>
-        <div class="form-group"><label>Date</label><input type="date" id="meal-date" /></div>
-      </div>
-      <div class="form-group" style="margin-bottom:14px;">
-        <label>Food description</label>
-        <textarea id="meal-food" placeholder="e.g. Grilled salmon, roasted vegetables, sparkling water..."></textarea>
-      </div>
-      <button class="btn" onclick="logMeal()" id="log-btn">+ Add entry</button>
     </div>
 
     <!-- DAILY NOTES & ENERGY -->
@@ -440,13 +446,12 @@ async function postToSheets(payload){
 // --- WATER FUNCTIONS ---
 function todayWaterOz(){return waterData[today()]||0;}
 
-async function addWater(oz){
-  const td=today();
+async function addWater(oz, date){
+  const td=date||today();
   const newOz=Math.min((waterData[td]||0)+oz, 200);
   waterData[td]=newOz;
   renderWaterDisplay();
   updateStats();
-  // Save to sheets — use today's date as the row key
   const id='water-'+td;
   try{
     await postToSheets({action:'water',id,date:td,water:String(newOz)});
@@ -456,10 +461,12 @@ async function addWater(oz){
 
 function addCustomWater(){
   const inp=document.getElementById('water-custom');
+  const dateInp=document.getElementById('water-date');
   const cups=parseFloat(inp.value);
+  const d=dateInp.value||today();
   if(!cups||cups<=0){alert('Please enter a valid amount in cups.');return;}
   inp.value='';
-  addWater(cups*8);
+  addWater(cups*8, d);
 }
 
 async function resetWater(){
@@ -937,6 +944,7 @@ function renderChart(){
 const now=new Date();
 document.getElementById('meal-time').value=now.toTimeString().slice(0,5);
 document.getElementById('meal-date').value=today();
+document.getElementById('water-date').value=today();
 updateEnergyDisplay(5);
 renderToday();updateStats();
 setInterval(renderToday,60000);

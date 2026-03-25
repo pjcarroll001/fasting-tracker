@@ -354,10 +354,26 @@
     <div class="card">
       <div class="card-title">Daily breakdown · this week</div>
       <div class="chart-wrap" style="height:300px;"><canvas id="weeklyChart"></canvas></div>
+      <div class="legend" style="margin-top:10px;">
+        <span><span class="leg-dot" style="background:rgba(29,158,117,0.7);"></span>Meals</span>
+        <span><span class="leg-dot" style="background:rgba(26,111,196,0.25);border:1px solid #1a6fc4;"></span>Water goal</span>
+      </div>
     </div>
     <div class="card" id="weekly-days-card">
       <div class="card-title">Day by day</div>
       <div id="weekly-days-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Daily drinks · this week</div>
+      <div class="chart-wrap" style="height:280px;"><canvas id="weeklyDrinksChart"></canvas></div>
+      <div class="legend" style="margin-top:10px;">
+        <span><span class="leg-dot" style="background:rgba(26,111,196,0.7);"></span>Water (cups)</span>
+        <span><span class="leg-dot" style="background:rgba(124,58,237,0.65);"></span>Alcohol (glasses)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Daily energy · this week</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="weeklyEnergyChart"></canvas></div>
     </div>
   </div>
 
@@ -388,6 +404,8 @@ const WATER_GOAL_CUPS = 10;
 let chartInstance = null;
 let waterChartInstance = null;
 let weeklyChartInstance = null;
+let weeklyDrinksChartInstance = null;
+let weeklyEnergyChartInstance = null;
 let energyChartInstance = null;
 let meals = [];
 let waterData = {};
@@ -801,6 +819,79 @@ function renderWeekly(){
         x:{ticks:{font:{size:11,family:'sans-serif'},color:'#4a7a9b'},grid:{display:false},border:{color:'#b8d9f0'}},
         y:{position:'left',min:0,max:6,ticks:{stepSize:1,font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'},title:{display:true,text:'Meals',font:{size:10},color:'#4a7a9b'}},
         y2:{position:'right',min:0,max:1,ticks:{stepSize:1,callback:(v)=>v?'Yes':'No',font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{display:false},border:{color:'#b8d9f0'},title:{display:true,text:'Goals',font:{size:10},color:'#4a7a9b'}}
+      }
+    }
+  });
+
+  // --- DRINKS BAR CHART ---
+  if(weeklyDrinksChartInstance){weeklyDrinksChartInstance.destroy();weeklyDrinksChartInstance=null;}
+  const drinksCanvas=document.getElementById('weeklyDrinksChart');
+  const weekWaterCups=weekDates.map(d=>parseFloat(((waterData[d]||0)/8).toFixed(1)));
+  const weekAlcohol=weekDates.map(d=>(alcoholData[d]||{total:0}).total);
+  weeklyDrinksChartInstance=new Chart(drinksCanvas,{
+    type:'bar',
+    data:{
+      labels:dayNames,
+      datasets:[
+        {label:'Water (cups)',data:weekWaterCups,backgroundColor:'rgba(26,111,196,0.7)',borderColor:'#1a6fc4',borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+        {label:'Alcohol (glasses)',data:weekAlcohol,backgroundColor:'rgba(124,58,237,0.65)',borderColor:'#7c3aed',borderWidth:1.5,borderRadius:4,yAxisID:'y2'},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,
+          titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
+          callbacks:{
+            label:(ctx)=>{
+              if(ctx.dataset.label==='Water (cups)') return` ${ctx.parsed.y} cups water`;
+              return` ${ctx.parsed.y} alcoholic glasses`;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ticks:{font:{size:11,family:'sans-serif'},color:'#4a7a9b'},grid:{display:false},border:{color:'#b8d9f0'}},
+        y:{position:'left',min:0,ticks:{stepSize:2,font:{size:10,family:'sans-serif'},color:'#1a6fc4'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'},title:{display:true,text:'Cups',font:{size:10},color:'#1a6fc4'}},
+        y2:{position:'right',min:0,ticks:{stepSize:1,font:{size:10,family:'sans-serif'},color:'#7c3aed'},grid:{display:false},border:{color:'#b8d9f0'},title:{display:true,text:'Glasses',font:{size:10},color:'#7c3aed'}}
+      }
+    }
+  });
+
+  // --- ENERGY LINE CHART ---
+  if(weeklyEnergyChartInstance){weeklyEnergyChartInstance.destroy();weeklyEnergyChartInstance=null;}
+  const energyCanvas=document.getElementById('weeklyEnergyChart');
+  const weekEnergyValues=weekDates.map(d=>notesData[d]?notesData[d].energy:null);
+  const energyPointColors=weekEnergyValues.map(v=>v===null?'transparent':v>=8?'#1D9E75':v>=5?'#c47a00':'#c24a4a');
+  weeklyEnergyChartInstance=new Chart(energyCanvas,{
+    type:'line',
+    data:{
+      labels:dayNames,
+      datasets:[{
+        label:'Energy',data:weekEnergyValues,
+        borderColor:'#1D9E75',borderWidth:2.5,
+        pointBackgroundColor:energyPointColors,
+        pointRadius:weekEnergyValues.map(v=>v===null?0:6),
+        pointHoverRadius:8,
+        fill:true,backgroundColor:'rgba(29,158,117,0.08)',
+        tension:0.3,spanGaps:false
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,
+          titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
+          callbacks:{label:(ctx)=>ctx.parsed.y!==null?` Energy: ${ctx.parsed.y}/10`:' No data'}
+        }
+      },
+      scales:{
+        x:{ticks:{font:{size:11,family:'sans-serif'},color:'#4a7a9b'},grid:{display:false},border:{color:'#b8d9f0'}},
+        y:{min:0,max:10,ticks:{stepSize:2,font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'},title:{display:true,text:'Energy (1–10)',font:{size:10},color:'#4a7a9b'}}
       }
     }
   });

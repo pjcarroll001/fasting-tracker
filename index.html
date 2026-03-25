@@ -228,8 +228,8 @@
     <div class="water-card">
       <div class="card-title">Water intake · today</div>
       <div class="water-progress-wrap">
-        <span class="water-amount" id="water-oz-display">0</span>
-        <span class="water-goal">oz &nbsp;/&nbsp; <span id="water-cups-display">0</span> of 10 cups</span>
+        <span class="water-amount" id="water-cups-display">0</span>
+        <span class="water-goal"> of 10 cups</span>
         <div class="water-indicator"><div class="water-fill" id="water-progress-fill" style="width:0%"></div></div>
       </div>
       <div class="water-buttons">
@@ -541,7 +541,6 @@ function renderWaterDisplay(){
   const oz=todayWaterOz();
   const cups=oz/8;
   const pct=Math.min(100,(oz/WATER_GOAL_OZ)*100);
-  document.getElementById('water-oz-display').textContent=oz;
   document.getElementById('water-cups-display').textContent=cups.toFixed(1);
   document.getElementById('water-progress-fill').style.width=pct.toFixed(1)+'%';
   const comp=document.getElementById('water-complete');

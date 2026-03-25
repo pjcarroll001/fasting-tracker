@@ -593,21 +593,7 @@ function showTab(name,btn){
   if(name==='goals')renderGoals();
 }
 
-function renderTodayEntries(){
-  const td=today();
-  const todayMeals=meals.filter(m=>m.date===td);
-  const el=document.getElementById('today-log');
-  if(!todayMeals.length){el.innerHTML='<div class="empty">No entries yet today.</div>';return;}
-  el.innerHTML=`<div class="log-list">${todayMeals.map(m=>`
-    <div class="log-item">
-      <span class="log-time">${fmt12(m.time)}</span>
-      <span class="log-food">${escHtml(m.food)}</span>
-      <button class="log-del" onclick="deleteMeal('${m.id}')">✕</button>
-    </div>`).join('')}</div>`;
-}
-
 function renderToday(){
-  renderTodayEntries();
   renderWaterDisplay();
   const now=new Date();
   const curH=now.getHours()+now.getMinutes()/60;

@@ -133,11 +133,6 @@
     <button class="btn btn-sync" onclick="syncFromSheets()" id="sync-btn">↻ Sync with Google Sheets</button>
   </div>
 
-  <div id="debug-box" style="display:none;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px;margin-bottom:1rem;font-size:11px;color:#333;word-break:break-all;">
-    <strong>Debug info:</strong><br/>
-    <span id="debug-out"></span>
-  </div>
-
   <div class="tabs">
     <button class="tab active" onclick="showTab('today',this)">Today</button>
     <button class="tab" onclick="showTab('log',this)">Meal log</button>
@@ -288,15 +283,11 @@ async function syncFromSheets(){
   try{
     const res=await fetch(SCRIPT_URL+'?t='+Date.now());
     const raw=await res.text();
-    document.getElementById('debug-box').style.display='block';
-    document.getElementById('debug-out').textContent='RAW: '+raw.slice(0,500);
     let data;
     try{data=JSON.parse(raw);}catch(e){
       setSyncStatus('error','Bad response from sheet');
-      document.getElementById('debug-out').textContent='PARSE ERROR: '+raw.slice(0,300);
       btn.disabled=false;return;
     }
-    document.getElementById('debug-out').textContent='PARSED '+data.length+' rows. First: '+JSON.stringify(data[0]);
     meals=data.filter(r=>r.id&&r.date&&r.time&&r.food)
       .map(r=>({
         id:String(r.id),
@@ -304,15 +295,12 @@ async function syncFromSheets(){
         time:normalizeTime(String(r.time)),
         food:String(r.food)
       }));
-    document.getElementById('debug-out').textContent+=' | MEALS: '+meals.length+' | First meal: '+JSON.stringify(meals[0]);
     meals.sort((a,b)=>a.date+a.time>b.date+b.time?1:-1);
     const now=new Date();
     setSyncStatus('synced','Synced · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}));
     renderToday();updateStats();renderAllLog();renderGoals();setTimeout(renderChart,100);
   }catch(e){
     setSyncStatus('error','Sync failed — '+e.message);
-    document.getElementById('debug-box').style.display='block';
-    document.getElementById('debug-out').textContent='ERROR: '+e.message;
   }
   btn.disabled=false;
 }

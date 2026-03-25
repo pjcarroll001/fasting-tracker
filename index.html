@@ -24,6 +24,9 @@
     --water: #1a6fc4;
     --water-dim: #155da0;
     --water-light: #dbeafe;
+    --alcohol: #7c3aed;
+    --alcohol-dim: #6d28d9;
+    --alcohol-light: #ede9fe;
     --warn: #c47a00;
     --warn-light: #fff0cc;
     --danger: #c24a4a;
@@ -55,14 +58,14 @@
 
   .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
   .stat { background: var(--card); border: 0.5px solid var(--border); border-radius: 10px; padding: 12px 14px; }
-  .stat-label { font-size: 10px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .07em; }
+  .stat-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; }
   .stat-value { font-size: 20px; font-weight: 500; color: var(--text); }
   .stat-value.green { color: var(--accent); }
   .stat-value.amber { color: var(--warn); }
   .stat-value.blue { color: var(--water); }
 
   .card { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
-  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 1rem; }
+  .card-title { font-size: 14px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent-dim); margin-bottom: 1rem; font-weight: 700; }
 
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
@@ -142,6 +145,16 @@
   .badge-none { background:var(--bg2); color:var(--muted); }
   .week-day-meals { font-size:11px; color:var(--muted); margin-left:auto; }
 
+  .alcohol-card { background: var(--card); border: 0.5px solid #c4b5fd; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .alcohol-amount { font-size: 22px; font-weight: 500; color: var(--alcohol); }
+  .alcohol-sub { font-size: 12px; color: var(--muted); margin-left: 4px; }
+  .alcohol-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .btn-alcohol { background: var(--alcohol-light); color: var(--alcohol); border: 0.5px solid #c4b5fd; border-radius: 8px; padding: 9px 16px; font-family: var(--font); font-size: 12px; font-weight: 500; cursor: pointer; transition: background .15s, transform .1s; }
+  .btn-alcohol:hover { background: #ddd6fe; }
+  .btn-alcohol:active { transform: scale(0.97); }
+  .btn-alcohol-reset { background: none; border: 0.5px solid var(--border2); color: var(--muted); border-radius: 8px; padding: 9px 14px; font-family: var(--font); font-size: 12px; cursor: pointer; transition: color .15s, border-color .15s; }
+  .btn-alcohol-reset:hover { color: var(--danger); border-color: var(--danger); }
+
   .notes-item { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
   .notes-item:last-child { border-bottom: none; }
   .notes-date { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
@@ -169,22 +182,24 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="showTab('today',this)">Today</button>
+    <button class="tab active" onclick="showTab('today',this)">Entry</button>
     <button class="tab" onclick="showTab('log',this)">Meal log</button>
     <button class="tab" onclick="showTab('chart',this)">Meal Trend</button>
-    <button class="tab" onclick="showTab('water',this)">Water</button>
+    <button class="tab" onclick="showTab('water',this)">Drinks</button>
     <button class="tab" onclick="showTab('energy',this)">Energy</button>
-    <button class="tab" onclick="showTab('goals',this)">Goals</button>
     <button class="tab" onclick="showTab('weekly',this)" style="font-weight:700;">Weekly</button>
   </div>
 
   <!-- TODAY -->
   <div class="section active" id="tab-today">
-    <div class="stats-row">
+    <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
       <div class="stat"><div class="stat-label">Fasting streak</div><div class="stat-value green" id="streak-val">—</div></div>
       <div class="stat"><div class="stat-label">Days logged</div><div class="stat-value" id="days-val">0</div></div>
       <div class="stat"><div class="stat-label">Today's meals</div><div class="stat-value" id="meals-today-val">0</div></div>
+    </div>
+    <div class="stats-row" style="grid-template-columns:repeat(2,1fr);margin-top:-4px;">
       <div class="stat"><div class="stat-label">Water today</div><div class="stat-value blue" id="water-today-val">0 cups</div></div>
+      <div class="stat"><div class="stat-label">Drinks today</div><div class="stat-value" style="color:var(--alcohol);" id="alcohol-today-val">0</div></div>
     </div>
 
     <div class="card">
@@ -239,7 +254,43 @@
       <div class="water-complete" id="water-complete">Goal reached! Great work today!</div>
     </div>
 
-    <!-- DAILY NOTES & ENERGY -->
+    <!-- ALCOHOL LOG -->
+    <div class="alcohol-card">
+      <div class="card-title">Alcoholic drinks · today</div>
+      <div style="margin-bottom:1rem;">
+        <span class="alcohol-amount" id="alcohol-count-display">0</span>
+        <span class="alcohol-sub">drinks today</span>
+        <div style="display:flex;gap:16px;margin-top:6px;font-size:11px;color:var(--muted);">
+          <span>Beer: <strong id="beer-count">0</strong></span>
+          <span>Mixed: <strong id="mixed-count">0</strong></span>
+          <span>Wine: <strong id="wine-count">0</strong></span>
+          <span>Shot: <strong id="shot-count">0</strong></span>
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px;">
+        <div class="form-group">
+          <label>Number of drinks</label>
+          <input type="number" id="alcohol-custom" min="1" max="20" step="1" placeholder="e.g. 2" />
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="alcohol-type">
+            <option value="beer">Beer</option>
+            <option value="mixed">Mixed drink</option>
+            <option value="wine">Wine</option>
+            <option value="shot">Shot / spirit</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>Date</label>
+        <input type="date" id="alcohol-date" />
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn" onclick="addCustomAlcohol()">+ Add entry</button>
+        <button class="btn-alcohol-reset" onclick="resetAlcohol()">Reset today</button>
+      </div>
+    </div>
     <div class="card">
       <div class="card-title">Daily energy & how you feel</div>
       <div style="margin-bottom:16px;">
@@ -280,14 +331,15 @@
     </div>
   </div>
 
-  <!-- WATER CHART -->
+  <!-- DRINKS CHART -->
   <div class="section" id="tab-water">
     <div class="card">
-      <div class="card-title">Daily water intake · last 30 days</div>
+      <div class="card-title">Water vs alcoholic drinks · last 30 days</div>
       <div class="chart-wrap"><canvas id="waterChart"></canvas></div>
       <div class="legend">
-        <span><span class="leg-dot" style="background:#1a6fc4;"></span>Cups consumed</span>
-        <span><span class="leg-dot" style="background:#fca5a5;border:1px dashed #ef4444;"></span>Daily goal (10 cups)</span>
+        <span><span class="leg-dot" style="background:#1a6fc4;"></span>Water (cups)</span>
+        <span><span class="leg-dot" style="background:#7c3aed;"></span>Alcoholic drinks (count)</span>
+        <span><span class="leg-dot" style="background:#fca5a5;border:1px dashed #ef4444;"></span>Water goal (10 cups)</span>
       </div>
     </div>
   </div>
@@ -324,25 +376,9 @@
     </div>
   </div>
 
-  <!-- GOALS -->
-  <div class="section" id="tab-goals">
-    <div class="card">
-      <div class="card-title">Your goals</div>
-      <div id="goals-list"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Add a goal</div>
-      <div class="form-group" style="margin-bottom:14px;">
-        <label>Goal description</label>
-        <input type="text" id="new-goal" placeholder="e.g. Hit eating window 5 of 6 days this week" />
-      </div>
-      <button class="btn" onclick="addGoal()">+ Add goal</button>
-    </div>
-  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAGW0RhqkkVGJCXK7qJTytlg7ke6AZhCEC-txTDJ9_ouAYT6nDEKF_iT8XvZ7o_7O2/exec';
 const WINDOW_START = 13;
 const WINDOW_END = 21;
@@ -354,19 +390,11 @@ let weeklyChartInstance = null;
 let energyChartInstance = null;
 let meals = [];
 let waterData = {};
-let notesData = {}; // {date: {energy, notes}}
+let alcoholData = {}; // {date: {total, beer, mixed, wine, shot}}
+let notesData = {};
 
 function getStore(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
 function setStore(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-function getGoals(){return getStore('ft_goals')||[
-  {id:1,text:'Complete 16:8 window 5 of 6 days this week',done:false},
-  {id:2,text:'First meal no earlier than 1 PM every day',done:false},
-  {id:3,text:'Last meal by 9 PM every day',done:false},
-  {id:4,text:'Log every meal consistently',done:false},
-  {id:5,text:'Maintain 3-day fasting streak',done:false},
-  {id:6,text:'Hit water goal 5 days this week',done:false},
-];}
-function saveGoals(g){setStore('ft_goals',g);}
 
 function normalizeDate(d){
   if(/^\d{4}-\d{2}-\d{2}T/.test(d)){
@@ -412,13 +440,16 @@ async function syncFromSheets(){
     const raw=await res.text();
     let data;
     try{data=JSON.parse(raw);}catch(e){setSyncStatus('error','Bad response from sheet');btn.disabled=false;return;}
-    meals=[];waterData={};notesData={};
+    meals=[];waterData={};alcoholData={};notesData={};
     data.forEach(r=>{
       if(!r.id) return;
       const date=normalizeDate(String(r.date||''));
       if(r.water&&String(r.water).trim()!==''&&String(r.water).trim()!=='0'){
         const oz=parseFloat(r.water);
         if(!isNaN(oz)&&oz>0){if(!waterData[date])waterData[date]=0;waterData[date]=Math.max(waterData[date],oz);}
+      }
+      if(r.alcohol&&String(r.alcohol).trim()!==''){
+        try{const a=JSON.parse(r.alcohol);if(a&&a.total>=0) alcoholData[date]=a;}catch(e){}
       }
       if(r.energy&&String(r.energy).trim()!==''){
         const en=parseFloat(r.energy);
@@ -431,7 +462,7 @@ async function syncFromSheets(){
     meals.sort((a,b)=>a.date+a.time>b.date+b.time?1:-1);
     const now=new Date();
     setSyncStatus('synced','Synced · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}));
-    renderToday();updateStats();renderAllLog();renderGoals();
+    renderToday();updateStats();renderAllLog();
     setTimeout(()=>{renderChart();renderWaterChart();renderWeekly();renderEnergyChart();renderNotesHistory();},100);
   }catch(e){
     setSyncStatus('error','Sync failed — '+e.message);
@@ -495,29 +526,30 @@ function renderWaterDisplay(){
 
 function renderWaterChart(){
   const cutoff=new Date();cutoff.setDate(cutoff.getDate()-29);
-  const allDates=Object.keys(waterData).filter(d=>new Date(d+'T12:00:00')>=cutoff).sort();
-  // Also include days with meals but no water
-  const mealDates=[...new Set(meals.filter(m=>new Date(m.date+'T12:00:00')>=cutoff).map(m=>m.date))];
-  const days=[...new Set([...allDates,...mealDates])].sort();
+  const allDates=[...new Set([
+    ...Object.keys(waterData),
+    ...Object.keys(alcoholData),
+    ...meals.map(m=>m.date)
+  ])].filter(d=>new Date(d+'T12:00:00')>=cutoff).sort();
   if(waterChartInstance){waterChartInstance.destroy();waterChartInstance=null;}
   const canvas=document.getElementById('waterChart');
-  if(!days.length){
-    const ctx=canvas.getContext('2d');
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#4a7a9b';ctx.font='13px sans-serif';
-    ctx.textAlign='center';ctx.fillText('No data yet — log water to see the chart.',canvas.offsetWidth/2,120);
-    return;
+  if(!allDates.length){
+    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#4a7a9b';ctx.font='13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('No data yet — log water or drinks to see the chart.',canvas.offsetWidth/2,120);return;
   }
-  const labels=days.map(d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
-  const cupValues=days.map(d=>parseFloat(((waterData[d]||0)/8).toFixed(1)));
-  const goalLine=days.map(()=>WATER_GOAL_CUPS);
+  const labels=allDates.map(d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+  const cupValues=allDates.map(d=>parseFloat(((waterData[d]||0)/8).toFixed(1)));
+  const alcoholValues=allDates.map(d=>(alcoholData[d]||{total:0}).total);
+  const goalLine=allDates.map(()=>WATER_GOAL_CUPS);
   waterChartInstance=new Chart(canvas,{
     type:'bar',
     data:{
       labels,
       datasets:[
-        {label:'Cups',data:cupValues,backgroundColor:'rgba(26,111,196,0.7)',borderColor:'#1a6fc4',borderWidth:1.5,borderRadius:4},
-        {label:'Goal',data:goalLine,type:'line',borderColor:'rgba(239,68,68,0.6)',borderWidth:2,borderDash:[5,5],pointRadius:0,fill:false},
+        {label:'Water (cups)',data:cupValues,backgroundColor:'rgba(26,111,196,0.7)',borderColor:'#1a6fc4',borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+        {label:'Alcoholic drinks',data:alcoholValues,backgroundColor:'rgba(124,58,237,0.65)',borderColor:'#7c3aed',borderWidth:1.5,borderRadius:4,yAxisID:'y2'},
+        {label:'Water goal',data:goalLine,type:'line',borderColor:'rgba(239,68,68,0.6)',borderWidth:2,borderDash:[5,5],pointRadius:0,fill:false,yAxisID:'y'},
       ]
     },
     options:{
@@ -530,15 +562,17 @@ function renderWaterChart(){
           callbacks:{
             title:(items)=>labels[items[0].dataIndex]||'',
             label:(ctx)=>{
-              if(ctx.dataset.label==='Goal') return ' Goal: 10 cups';
-              return ` ${ctx.parsed.y} cups (${Math.round(ctx.parsed.y*8)} oz)`;
+              if(ctx.dataset.label==='Water (cups)') return` Water: ${ctx.parsed.y} cups (${Math.round(ctx.parsed.y*8)} oz)`;
+              if(ctx.dataset.label==='Alcoholic drinks') return` Drinks: ${ctx.parsed.y}`;
+              return` Water goal: 10 cups`;
             }
           }
         }
       },
       scales:{
         x:{ticks:{font:{size:10,family:'sans-serif'},color:'#4a7a9b',maxRotation:50},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
-        y:{min:0,max:12,ticks:{stepSize:2,callback:(v)=>v+' cups',font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}}
+        y:{position:'left',min:0,title:{display:true,text:'Water (cups)',font:{size:10},color:'#1a6fc4'},ticks:{stepSize:2,callback:(v)=>v+' cups',font:{size:10,family:'sans-serif'},color:'#1a6fc4'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
+        y2:{position:'right',min:0,title:{display:true,text:'Drinks',font:{size:10},color:'#7c3aed'},ticks:{stepSize:1,callback:(v)=>v,font:{size:10,family:'sans-serif'},color:'#7c3aed'},grid:{display:false},border:{color:'#b8d9f0'}}
       }
     }
   });
@@ -597,11 +631,11 @@ function showTab(name,btn){
   if(name==='weekly')setTimeout(renderWeekly,80);
   if(name==='energy'){setTimeout(renderEnergyChart,80);renderNotesHistory();}
   if(name==='log')renderAllLog();
-  if(name==='goals')renderGoals();
 }
 
 function renderToday(){
   renderWaterDisplay();
+  renderAlcoholDisplay();
   const now=new Date();
   const curH=now.getHours()+now.getMinutes()/60;
   const inW=curH>=WINDOW_START&&curH<=WINDOW_END;
@@ -644,6 +678,8 @@ function updateStats(){
   const oz=todayWaterOz();
   const cups=(oz/8).toFixed(1);
   document.getElementById('water-today-val').textContent=cups+' cups';
+  const alc=todayAlcohol(td);
+  document.getElementById('alcohol-today-val').textContent=alc.total+' drink'+(alc.total!==1?'s':'');
   const allDays=[...new Set(meals.map(m=>m.date))].sort((a,b)=>b>a?1:-1);
   let streak=0;
   for(let i=0;i<allDays.length;i++){
@@ -654,27 +690,6 @@ function updateStats(){
   const sv=document.getElementById('streak-val');
   sv.textContent=streak+'d';
   sv.className='stat-value '+(streak>=3?'green':'amber');
-}
-
-function renderGoals(){
-  const goals=getGoals();
-  const el=document.getElementById('goals-list');
-  if(!goals.length){el.innerHTML='<div class="empty">No goals yet.</div>';return;}
-  el.innerHTML=goals.map(g=>`
-    <div class="goal-item">
-      <div class="goal-check${g.done?' checked':''}" onclick="toggleGoal(${g.id})"></div>
-      <span class="goal-text" style="${g.done?'text-decoration:line-through;color:var(--muted)':''}">${escHtml(g.text)}</span>
-      <button class="log-del" onclick="deleteGoal(${g.id})">✕</button>
-    </div>`).join('');
-}
-
-function toggleGoal(id){saveGoals(getGoals().map(g=>g.id===id?{...g,done:!g.done}:g));renderGoals();}
-function deleteGoal(id){saveGoals(getGoals().filter(g=>g.id!==id));renderGoals();}
-function addGoal(){
-  const inp=document.getElementById('new-goal');
-  const t=inp.value.trim();if(!t)return;
-  const goals=getGoals();goals.push({id:Date.now(),text:t,done:false});
-  saveGoals(goals);inp.value='';renderGoals();
 }
 
 function getWeekDates(){
@@ -788,6 +803,65 @@ function renderWeekly(){
       }
     }
   });
+}
+
+// --- ALCOHOL FUNCTIONS ---
+function todayAlcohol(date){return alcoholData[date||today()]||{total:0,beer:0,mixed:0,wine:0,shot:0};}
+
+function renderAlcoholDisplay(date){
+  const td=date||today();
+  const a=todayAlcohol(td);
+  document.getElementById('alcohol-count-display').textContent=a.total;
+  document.getElementById('beer-count').textContent=a.beer||0;
+  document.getElementById('mixed-count').textContent=a.mixed||0;
+  document.getElementById('wine-count').textContent=a.wine||0;
+  document.getElementById('shot-count').textContent=a.shot||0;
+}
+
+async function addAlcohol(type){
+  const dateInp=document.getElementById('alcohol-date');
+  const td=dateInp.value||today();
+  const current=todayAlcohol(td);
+  const updated={...current,total:(current.total||0)+1,[type]:(current[type]||0)+1};
+  alcoholData[td]=updated;
+  renderAlcoholDisplay(td);
+  updateStats();
+  try{
+    await postToSheets({action:'alcohol',id:'alcohol-'+td,date:td,alcohol:JSON.stringify(updated)});
+  }catch(e){console.error('Alcohol save failed',e);}
+  if(waterChartInstance) renderWaterChart();
+}
+
+async function resetAlcohol(){
+  if(!confirm('Reset today\'s drink count to 0?')) return;
+  const dateInp=document.getElementById('alcohol-date');
+  const td=dateInp.value||today();
+  const reset={total:0,beer:0,mixed:0,wine:0,shot:0};
+  alcoholData[td]=reset;
+  renderAlcoholDisplay(td);
+  updateStats();
+  try{
+    await postToSheets({action:'alcohol',id:'alcohol-'+td,date:td,alcohol:JSON.stringify(reset)});
+  }catch(e){console.error('Alcohol reset failed',e);}
+  if(waterChartInstance) renderWaterChart();
+}
+
+function addCustomAlcohol(){
+  const inp=document.getElementById('alcohol-custom');
+  const type=document.getElementById('alcohol-type').value;
+  const count=parseInt(inp.value);
+  if(!count||count<=0){alert('Please enter a valid drink count.');return;}
+  inp.value='';
+  const dateInp=document.getElementById('alcohol-date');
+  const td=dateInp.value||today();
+  const current=todayAlcohol(td);
+  const updated={...current,total:(current.total||0)+count,[type]:(current[type]||0)+count};
+  alcoholData[td]=updated;
+  renderAlcoholDisplay(td);
+  updateStats();
+  postToSheets({action:'alcohol',id:'alcohol-'+td,date:td,alcohol:JSON.stringify(updated)})
+    .catch(e=>console.error('Alcohol save failed',e));
+  if(waterChartInstance) renderWaterChart();
 }
 
 function updateEnergyDisplay(val){
@@ -945,6 +1019,8 @@ const now=new Date();
 document.getElementById('meal-time').value=now.toTimeString().slice(0,5);
 document.getElementById('meal-date').value=today();
 document.getElementById('water-date').value=today();
+document.getElementById('alcohol-date').value=today();
+document.getElementById('alcohol-date').value=today();
 updateEnergyDisplay(5);
 renderToday();updateStats();
 setInterval(renderToday,60000);

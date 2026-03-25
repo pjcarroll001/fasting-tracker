@@ -231,21 +231,32 @@ function getGoals(){return getStore('ft_goals')||[
 function saveGoals(g){setStore('ft_goals',g);}
 
 function normalizeDate(d){
-  // Handle formats: 2026-03-25, 3/25/2026, 25/3/2026, March 25 2026
+  if(/^\d{4}-\d{2}-\d{2}T/.test(d)){
+    const dt=new Date(d);
+    const y=dt.getUTCFullYear();
+    const mo=String(dt.getUTCMonth()+1).padStart(2,'0');
+    const day=String(dt.getUTCDate()).padStart(2,'0');
+    return `${y}-${mo}-${day}`;
+  }
   if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  const parts = d.split(/[\/\-]/);
+  const parts=d.split(/[\/\-]/);
   if(parts.length===3){
     if(parts[0].length===4) return `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
     return `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
   }
-  const parsed = new Date(d);
+  const parsed=new Date(d);
   if(!isNaN(parsed)) return parsed.toISOString().slice(0,10);
   return d;
 }
 
 function normalizeTime(t){
-  // Handle formats: 14:20, 14:20:00, 2:20 PM, 14.20
-  t = String(t).trim();
+  if(/^\d{4}-\d{2}-\d{2}T/.test(t)){
+    const dt=new Date(t);
+    const h=String(dt.getUTCHours()).padStart(2,'0');
+    const m=String(dt.getUTCMinutes()).padStart(2,'0');
+    return `${h}:${m}`;
+  }
+  t=String(t).trim();
   if(/^\d{1,2}:\d{2}(:\d{2})?$/.test(t)){
     const parts=t.split(':');
     return `${parts[0].padStart(2,'0')}:${parts[1].padStart(2,'0')}`;

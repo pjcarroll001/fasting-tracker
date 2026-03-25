@@ -21,6 +21,9 @@
     --accent-dim: #0f6e56;
     --accent-glow: rgba(29,158,117,0.12);
     --accent-light: #d0f0e6;
+    --water: #1a6fc4;
+    --water-dim: #155da0;
+    --water-light: #dbeafe;
     --warn: #c47a00;
     --warn-light: #fff0cc;
     --danger: #c24a4a;
@@ -42,23 +45,24 @@
   .sync-dot.syncing { background: var(--warn); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-  .tabs { display: flex; border-bottom: 0.5px solid var(--border); margin-bottom: 1.75rem; }
-  .tab { padding: 9px 18px; font-size: 11px; font-family: var(--font); cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s, border-color .2s; letter-spacing: 0.05em; text-transform: uppercase; }
+  .tabs { display: flex; border-bottom: 0.5px solid var(--border); margin-bottom: 1.75rem; overflow-x: auto; }
+  .tab { padding: 9px 16px; font-size: 14px; font-family: var(--font); cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s, border-color .2s; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab:hover:not(.active) { color: var(--text); }
 
   .section { display: none; }
   .section.active { display: block; }
 
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem; }
-  .stat { background: var(--card); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .stat { background: var(--card); border: 0.5px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .stat-label { font-size: 10px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .07em; }
-  .stat-value { font-size: 24px; font-weight: 500; color: var(--text); }
+  .stat-value { font-size: 20px; font-weight: 500; color: var(--text); }
   .stat-value.green { color: var(--accent); }
   .stat-value.amber { color: var(--warn); }
+  .stat-value.blue { color: var(--water); }
 
   .card { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
-  .card-title { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 1rem; }
+  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 1rem; }
 
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
@@ -75,8 +79,8 @@
   .btn:hover { background: var(--accent-dim); }
   .btn:active { transform: scale(0.98); }
   .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-  .btn-sync { background: #1a6fc4; }
-  .btn-sync:hover:not(:disabled) { background: #155da0; }
+  .btn-sync { background: var(--accent); }
+  .btn-sync:hover:not(:disabled) { background: var(--accent-dim); }
 
   .window-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 1rem; }
   .window-bar.on-track { background: var(--accent-light); color: var(--accent); border: 0.5px solid var(--accent-dim); }
@@ -87,6 +91,22 @@
   .window-indicator { height: 6px; border-radius: 3px; background: var(--bg2); overflow: hidden; border: 0.5px solid var(--border); }
   .window-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width .5s ease; }
 
+  /* WATER TRACKER */
+  .water-card { background: var(--card); border: 0.5px solid #90c4e8; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .water-progress-wrap { margin-bottom: 1rem; }
+  .water-indicator { height: 10px; border-radius: 5px; background: var(--bg2); overflow: hidden; border: 0.5px solid var(--border); margin-top: 5px; }
+  .water-fill { height: 100%; border-radius: 5px; background: var(--water); transition: width .4s ease; }
+  .water-amount { font-size: 22px; font-weight: 500; color: var(--water); }
+  .water-goal { font-size: 12px; color: var(--muted); margin-left: 4px; }
+  .water-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .btn-water { background: var(--water-light); color: var(--water); border: 0.5px solid #90c4e8; border-radius: 8px; padding: 9px 16px; font-family: var(--font); font-size: 12px; font-weight: 500; cursor: pointer; transition: background .15s, transform .1s; }
+  .btn-water:hover { background: #bfdbfe; }
+  .btn-water:active { transform: scale(0.97); }
+  .btn-water-reset { background: none; border: 0.5px solid var(--border2); color: var(--muted); border-radius: 8px; padding: 9px 14px; font-family: var(--font); font-size: 12px; cursor: pointer; transition: color .15s, border-color .15s; }
+  .btn-water-reset:hover { color: var(--danger); border-color: var(--danger); }
+  .water-complete { background: #d1fae5; color: #065f46; border: 0.5px solid #6ee7b7; border-radius: 8px; padding: 8px 14px; font-size: 12px; display: none; margin-top: 8px; }
+  .water-complete.show { display: block; }
+
   .log-list { display: flex; flex-direction: column; gap: 7px; }
   .log-item { display: flex; align-items: center; gap: 12px; padding: 9px 13px; background: var(--bg2); border-radius: 8px; border: 0.5px solid var(--border); transition: border-color .15s; }
   .log-item:hover { border-color: var(--border2); }
@@ -96,8 +116,7 @@
   .log-del:hover { color: var(--danger); }
 
   .empty { text-align: center; padding: 2rem; color: var(--muted); font-size: 12px; }
-
-  .chart-wrap { position: relative; width: 100%; height: 380px; }
+  .chart-wrap { position: relative; width: 100%; height: 340px; }
 
   .goal-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
   .goal-item:last-child { border-bottom: none; }
@@ -112,6 +131,22 @@
   .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11px; color: var(--muted); margin-top: 12px; }
   .legend span { display: flex; align-items: center; gap: 5px; }
   .leg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .week-day-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:0.5px solid var(--border); }
+  .week-day-row:last-child { border-bottom:none; }
+  .week-day-name { font-size:12px; font-weight:500; min-width:36px; color:var(--text); }
+  .week-day-date { font-size:11px; color:var(--muted); min-width:60px; }
+  .week-day-badge { font-size:10px; padding:3px 8px; border-radius:10px; font-weight:500; }
+  .badge-hit { background:var(--accent-light); color:var(--accent); }
+  .badge-miss { background:var(--warn-light); color:var(--warn); }
+  .badge-none { background:var(--bg2); color:var(--muted); }
+  .week-day-meals { font-size:11px; color:var(--muted); margin-left:auto; }
+
+  .notes-item { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .notes-item:last-child { border-bottom: none; }
+  .notes-date { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .notes-energy-badge { background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 500; }
+  .notes-text { font-size: 12px; color: var(--text); line-height: 1.6; }
 
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -137,15 +172,21 @@
     <button class="tab active" onclick="showTab('today',this)">Today</button>
     <button class="tab" onclick="showTab('log',this)">Meal log</button>
     <button class="tab" onclick="showTab('chart',this)">Chart</button>
+    <button class="tab" onclick="showTab('water',this)">Water</button>
+    <button class="tab" onclick="showTab('energy',this)">Energy</button>
     <button class="tab" onclick="showTab('goals',this)">Goals</button>
+    <button class="tab" onclick="showTab('weekly',this)" style="font-weight:700;">Weekly</button>
   </div>
 
+  <!-- TODAY -->
   <div class="section active" id="tab-today">
     <div class="stats-row">
       <div class="stat"><div class="stat-label">Fasting streak</div><div class="stat-value green" id="streak-val">—</div></div>
       <div class="stat"><div class="stat-label">Days logged</div><div class="stat-value" id="days-val">0</div></div>
       <div class="stat"><div class="stat-label">Today's meals</div><div class="stat-value" id="meals-today-val">0</div></div>
+      <div class="stat"><div class="stat-label">Water today</div><div class="stat-value blue" id="water-today-val">0 cups</div></div>
     </div>
+
     <div class="card">
       <div class="card-title">Eating window status</div>
       <div id="window-status"></div>
@@ -154,6 +195,31 @@
         <div class="window-indicator"><div class="window-fill" id="window-progress" style="width:0%"></div></div>
       </div>
     </div>
+
+    <!-- WATER QUICK LOG -->
+    <div class="water-card">
+      <div class="card-title">Water intake · today</div>
+      <div class="water-progress-wrap">
+        <span class="water-amount" id="water-oz-display">0</span>
+        <span class="water-goal">oz &nbsp;/&nbsp; <span id="water-cups-display">0</span> of 10 cups</span>
+        <div class="water-indicator"><div class="water-fill" id="water-progress-fill" style="width:0%"></div></div>
+      </div>
+      <div class="water-buttons">
+        <button class="btn-water" onclick="addWater(8)">+ 8 oz (1 cup)</button>
+        <button class="btn-water" onclick="addWater(16)">+ 16 oz (2 cups)</button>
+        <button class="btn-water" onclick="addWater(24)">+ 24 oz (3 cups)</button>
+        <button class="btn-water-reset" onclick="resetWater()">Reset</button>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="form-group" style="margin-bottom:12px;">
+          <label>Custom amount (oz)</label>
+          <input type="number" id="water-custom" min="1" max="200" placeholder="e.g. 12" />
+        </div>
+        <button class="btn" onclick="addCustomWater()">+ Add entry</button>
+      </div>
+      <div class="water-complete" id="water-complete">Goal reached! Great work today!</div>
+    </div>
+
     <div class="card">
       <div class="card-title">Log a meal</div>
       <div class="form-row">
@@ -166,12 +232,29 @@
       </div>
       <button class="btn" onclick="logMeal()" id="log-btn">+ Add entry</button>
     </div>
+
+    <!-- DAILY NOTES & ENERGY -->
     <div class="card">
-      <div class="card-title">Today's entries</div>
-      <div id="today-log"><div class="empty">Loading...</div></div>
+      <div class="card-title">Daily energy & how you feel</div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <label style="font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;">Energy level</label>
+          <span id="energy-display" style="font-size:22px;font-weight:500;color:var(--accent);">5</span>
+        </div>
+        <input type="range" id="energy-slider" min="1" max="10" step="1" value="5" oninput="updateEnergyDisplay(this.value)" style="width:100%;" />
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;">
+          <span>1 · Low</span><span>5 · Moderate</span><span>10 · High</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>How are you feeling today?</label>
+        <textarea id="daily-notes" placeholder="e.g. Felt great today, lots of energy in the afternoon. No hunger during fasting window..." style="min-height:80px;"></textarea>
+      </div>
+      <button class="btn" onclick="saveNotes()" id="notes-btn">+ Save entry</button>
     </div>
   </div>
 
+  <!-- MEAL LOG -->
   <div class="section" id="tab-log">
     <div class="card">
       <div class="card-title">All entries · last 30 days</div>
@@ -179,6 +262,7 @@
     </div>
   </div>
 
+  <!-- CHART -->
   <div class="section" id="tab-chart">
     <div class="card">
       <div class="card-title">Eating times by day · last 30 days</div>
@@ -190,6 +274,51 @@
     </div>
   </div>
 
+  <!-- WATER CHART -->
+  <div class="section" id="tab-water">
+    <div class="card">
+      <div class="card-title">Daily water intake · last 30 days</div>
+      <div class="chart-wrap"><canvas id="waterChart"></canvas></div>
+      <div class="legend">
+        <span><span class="leg-dot" style="background:#1a6fc4;"></span>Cups consumed</span>
+        <span><span class="leg-dot" style="background:#fca5a5;border:1px dashed #ef4444;"></span>Daily goal (10 cups)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEKLY SUMMARY -->
+  <div class="section" id="tab-weekly">
+    <div id="weekly-header" style="margin-bottom:1rem;">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;" id="weekly-range"></div>
+    </div>
+    <div class="stats-row" id="weekly-stats" style="grid-template-columns:repeat(3,1fr);"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;" id="weekly-stats2"></div>
+    <div class="card">
+      <div class="card-title">Daily breakdown · this week</div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="weeklyChart"></canvas></div>
+    </div>
+    <div class="card" id="weekly-days-card">
+      <div class="card-title">Day by day</div>
+      <div id="weekly-days-list"></div>
+    </div>
+  </div>
+
+  <!-- ENERGY TAB -->
+  <div class="section" id="tab-energy">
+    <div class="card">
+      <div class="card-title">Energy level · last 30 days</div>
+      <div class="chart-wrap" style="height:320px;"><canvas id="energyChart"></canvas></div>
+      <div class="legend">
+        <span><span class="leg-dot" style="background:#1D9E75;border-radius:50%;"></span>Energy level (1–10)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Notes history · last 30 days</div>
+      <div id="notes-history"></div>
+    </div>
+  </div>
+
+  <!-- GOALS -->
   <div class="section" id="tab-goals">
     <div class="card">
       <div class="card-title">Your goals</div>
@@ -211,8 +340,15 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAGW0RhqkkVGJCXK7qJTytlg7ke6AZhCEC-txTDJ9_ouAYT6nDEKF_iT8XvZ7o_7O2/exec';
 const WINDOW_START = 13;
 const WINDOW_END = 21;
+const WATER_GOAL_OZ = 80;
+const WATER_GOAL_CUPS = 10;
 let chartInstance = null;
+let waterChartInstance = null;
+let weeklyChartInstance = null;
+let energyChartInstance = null;
 let meals = [];
+let waterData = {};
+let notesData = {}; // {date: {energy, notes}}
 
 function getStore(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
 function setStore(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
@@ -222,16 +358,14 @@ function getGoals(){return getStore('ft_goals')||[
   {id:3,text:'Last meal by 9 PM every day',done:false},
   {id:4,text:'Log every meal consistently',done:false},
   {id:5,text:'Maintain 3-day fasting streak',done:false},
+  {id:6,text:'Hit water goal 5 days this week',done:false},
 ];}
 function saveGoals(g){setStore('ft_goals',g);}
 
 function normalizeDate(d){
   if(/^\d{4}-\d{2}-\d{2}T/.test(d)){
     const dt=new Date(d);
-    const y=dt.getUTCFullYear();
-    const mo=String(dt.getUTCMonth()+1).padStart(2,'0');
-    const day=String(dt.getUTCDate()).padStart(2,'0');
-    return `${y}-${mo}-${day}`;
+    return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth()+1).padStart(2,'0')}-${String(dt.getUTCDate()).padStart(2,'0')}`;
   }
   if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
   const parts=d.split(/[\/\-]/);
@@ -247,27 +381,14 @@ function normalizeDate(d){
 function normalizeTime(t){
   if(/^\d{4}-\d{2}-\d{2}T/.test(t)){
     const dt=new Date(t);
-    const h=String(dt.getUTCHours()).padStart(2,'0');
-    const m=String(dt.getUTCMinutes()).padStart(2,'0');
-    return `${h}:${m}`;
+    return `${String(dt.getUTCHours()).padStart(2,'0')}:${String(dt.getUTCMinutes()).padStart(2,'0')}`;
   }
   t=String(t).trim();
-  if(/^\d{1,2}:\d{2}(:\d{2})?$/.test(t)){
-    const parts=t.split(':');
-    return `${parts[0].padStart(2,'0')}:${parts[1].padStart(2,'0')}`;
-  }
-  if(/^\d{1,2}\.\d{2}$/.test(t)){
-    const parts=t.split('.');
-    return `${parts[0].padStart(2,'0')}:${parts[1].padStart(2,'0')}`;
-  }
+  if(/^\d{1,2}:\d{2}(:\d{2})?$/.test(t)){const p=t.split(':');return`${p[0].padStart(2,'0')}:${p[1].padStart(2,'0')}`;}
+  if(/^\d{1,2}\.\d{2}$/.test(t)){const p=t.split('.');return`${p[0].padStart(2,'0')}:${p[1].padStart(2,'0')}`;}
   const pm=/pm/i.test(t);const am=/am/i.test(t);
-  const nums=t.replace(/[^0-9:]/g,'');
-  const np=nums.split(':');
-  if(np.length>=2){
-    let h=parseInt(np[0]);const m=np[1].padStart(2,'0');
-    if(pm&&h<12)h+=12;if(am&&h===12)h=0;
-    return `${String(h).padStart(2,'0')}:${m}`;
-  }
+  const np=t.replace(/[^0-9:]/g,'').split(':');
+  if(np.length>=2){let h=parseInt(np[0]);const m=np[1].padStart(2,'0');if(pm&&h<12)h+=12;if(am&&h===12)h=0;return`${String(h).padStart(2,'0')}:${m}`;}
   return t;
 }
 
@@ -284,21 +405,28 @@ async function syncFromSheets(){
     const res=await fetch(SCRIPT_URL+'?t='+Date.now());
     const raw=await res.text();
     let data;
-    try{data=JSON.parse(raw);}catch(e){
-      setSyncStatus('error','Bad response from sheet');
-      btn.disabled=false;return;
-    }
-    meals=data.filter(r=>r.id&&r.date&&r.time&&r.food)
-      .map(r=>({
-        id:String(r.id),
-        date:normalizeDate(String(r.date)),
-        time:normalizeTime(String(r.time)),
-        food:String(r.food)
-      }));
+    try{data=JSON.parse(raw);}catch(e){setSyncStatus('error','Bad response from sheet');btn.disabled=false;return;}
+    meals=[];waterData={};notesData={};
+    data.forEach(r=>{
+      if(!r.id) return;
+      const date=normalizeDate(String(r.date||''));
+      if(r.water&&String(r.water).trim()!==''&&String(r.water).trim()!=='0'){
+        const oz=parseFloat(r.water);
+        if(!isNaN(oz)&&oz>0){if(!waterData[date])waterData[date]=0;waterData[date]=Math.max(waterData[date],oz);}
+      }
+      if(r.energy&&String(r.energy).trim()!==''){
+        const en=parseFloat(r.energy);
+        if(!isNaN(en)&&en>0) notesData[date]={energy:en,notes:String(r.notes||'')};
+      }
+      if(r.time&&String(r.time).trim()!==''&&r.food&&String(r.food).trim()!==''){
+        meals.push({id:String(r.id),date,time:normalizeTime(String(r.time)),food:String(r.food)});
+      }
+    });
     meals.sort((a,b)=>a.date+a.time>b.date+b.time?1:-1);
     const now=new Date();
     setSyncStatus('synced','Synced · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}));
-    renderToday();updateStats();renderAllLog();renderGoals();setTimeout(renderChart,100);
+    renderToday();updateStats();renderAllLog();renderGoals();
+    setTimeout(()=>{renderChart();renderWaterChart();renderWeekly();renderEnergyChart();renderNotesHistory();},100);
   }catch(e){
     setSyncStatus('error','Sync failed — '+e.message);
   }
@@ -309,6 +437,107 @@ async function postToSheets(payload){
   return fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain'}});
 }
 
+// --- WATER FUNCTIONS ---
+function todayWaterOz(){return waterData[today()]||0;}
+
+async function addWater(oz){
+  const td=today();
+  const newOz=Math.min((waterData[td]||0)+oz, 200);
+  waterData[td]=newOz;
+  renderWaterDisplay();
+  updateStats();
+  // Save to sheets — use today's date as the row key
+  const id='water-'+td;
+  try{
+    await postToSheets({action:'water',id,date:td,water:String(newOz)});
+  }catch(e){console.error('Water save failed',e);}
+  if(waterChartInstance) renderWaterChart();
+}
+
+function addCustomWater(){
+  const inp=document.getElementById('water-custom');
+  const val=parseFloat(inp.value);
+  if(!val||val<=0){alert('Please enter a valid amount in oz.');return;}
+  inp.value='';
+  addWater(val);
+}
+
+async function resetWater(){
+  if(!confirm('Reset today\'s water intake to 0?')) return;
+  const td=today();
+  waterData[td]=0;
+  renderWaterDisplay();
+  updateStats();
+  const id='water-'+td;
+  try{
+    await postToSheets({action:'water',id,date:td,water:'0'});
+  }catch(e){console.error('Water reset failed',e);}
+  if(waterChartInstance) renderWaterChart();
+}
+
+function renderWaterDisplay(){
+  const oz=todayWaterOz();
+  const cups=oz/8;
+  const pct=Math.min(100,(oz/WATER_GOAL_OZ)*100);
+  document.getElementById('water-oz-display').textContent=oz;
+  document.getElementById('water-cups-display').textContent=cups.toFixed(1);
+  document.getElementById('water-progress-fill').style.width=pct.toFixed(1)+'%';
+  const comp=document.getElementById('water-complete');
+  if(oz>=WATER_GOAL_OZ) comp.classList.add('show'); else comp.classList.remove('show');
+}
+
+function renderWaterChart(){
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-29);
+  const allDates=Object.keys(waterData).filter(d=>new Date(d+'T12:00:00')>=cutoff).sort();
+  // Also include days with meals but no water
+  const mealDates=[...new Set(meals.filter(m=>new Date(m.date+'T12:00:00')>=cutoff).map(m=>m.date))];
+  const days=[...new Set([...allDates,...mealDates])].sort();
+  if(waterChartInstance){waterChartInstance.destroy();waterChartInstance=null;}
+  const canvas=document.getElementById('waterChart');
+  if(!days.length){
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#4a7a9b';ctx.font='13px sans-serif';
+    ctx.textAlign='center';ctx.fillText('No data yet — log water to see the chart.',canvas.offsetWidth/2,120);
+    return;
+  }
+  const labels=days.map(d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+  const cupValues=days.map(d=>parseFloat(((waterData[d]||0)/8).toFixed(1)));
+  const goalLine=days.map(()=>WATER_GOAL_CUPS);
+  waterChartInstance=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Cups',data:cupValues,backgroundColor:'rgba(26,111,196,0.7)',borderColor:'#1a6fc4',borderWidth:1.5,borderRadius:4},
+        {label:'Goal',data:goalLine,type:'line',borderColor:'rgba(239,68,68,0.6)',borderWidth:2,borderDash:[5,5],pointRadius:0,fill:false},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,
+          titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
+          callbacks:{
+            title:(items)=>labels[items[0].dataIndex]||'',
+            label:(ctx)=>{
+              if(ctx.dataset.label==='Goal') return ' Goal: 10 cups';
+              return ` ${ctx.parsed.y} cups (${Math.round(ctx.parsed.y*8)} oz)`;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ticks:{font:{size:10,family:'sans-serif'},color:'#4a7a9b',maxRotation:50},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
+        y:{min:0,max:12,ticks:{stepSize:2,callback:(v)=>v+' cups',font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}}
+      }
+    }
+  });
+}
+
+// --- MEAL FUNCTIONS ---
 async function logMeal(){
   const t=document.getElementById('meal-time').value;
   const d=document.getElementById('meal-date').value;
@@ -342,9 +571,7 @@ async function deleteMeal(id){
     setSyncStatus('synced','Deleted ✓');
     renderToday();updateStats();renderAllLog();
     if(chartInstance)renderChart();
-  }catch(e){
-    alert('Could not delete — check your connection.');
-  }
+  }catch(e){alert('Could not delete — check your connection.');}
 }
 
 function today(){return new Date().toISOString().slice(0,10);}
@@ -359,6 +586,9 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
   if(name==='chart')setTimeout(renderChart,80);
+  if(name==='water')setTimeout(renderWaterChart,80);
+  if(name==='weekly')setTimeout(renderWeekly,80);
+  if(name==='energy'){setTimeout(renderEnergyChart,80);renderNotesHistory();}
   if(name==='log')renderAllLog();
   if(name==='goals')renderGoals();
 }
@@ -378,6 +608,7 @@ function renderTodayEntries(){
 
 function renderToday(){
   renderTodayEntries();
+  renderWaterDisplay();
   const now=new Date();
   const curH=now.getHours()+now.getMinutes()/60;
   const inW=curH>=WINDOW_START&&curH<=WINDOW_END;
@@ -404,7 +635,7 @@ function renderAllLog(){
   recent.forEach(m=>{if(!byDate[m.date])byDate[m.date]=[];byDate[m.date].push(m);});
   const dates=Object.keys(byDate).sort((a,b)=>b>a?1:-1);
   el.innerHTML=dates.map(d=>`
-    <div class="date-header">${new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+    <div class="date-header">${new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}${waterData[d]?` &nbsp;·&nbsp; ${(waterData[d]/8).toFixed(1)} cups water`:''}</div>
     <div class="log-list" style="margin-bottom:8px;">${byDate[d].map(m=>`
       <div class="log-item">
         <span class="log-time" style="color:${inWindow(m.time)?'#1D9E75':'#EF9F27'}">${fmt12(m.time)}</span>
@@ -417,6 +648,9 @@ function updateStats(){
   const td=today();
   document.getElementById('meals-today-val').textContent=meals.filter(m=>m.date===td).length;
   document.getElementById('days-val').textContent=new Set(meals.map(m=>m.date)).size;
+  const oz=todayWaterOz();
+  const cups=(oz/8).toFixed(1);
+  document.getElementById('water-today-val').textContent=cups+' cups';
   const allDays=[...new Set(meals.map(m=>m.date))].sort((a,b)=>b>a?1:-1);
   let streak=0;
   for(let i=0;i<allDays.length;i++){
@@ -450,6 +684,231 @@ function addGoal(){
   saveGoals(goals);inp.value='';renderGoals();
 }
 
+function getWeekDates(){
+  const now=new Date();
+  const day=now.getDay();
+  const diffToMon=day===0?-6:1-day;
+  const mon=new Date(now);mon.setDate(now.getDate()+diffToMon);mon.setHours(0,0,0,0);
+  const dates=[];
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dates.push(d.toISOString().slice(0,10));}
+  return dates;
+}
+
+function dayHitWindow(date){
+  const dayMeals=meals.filter(m=>m.date===date&&m.time);
+  if(!dayMeals.length) return null;
+  return dayMeals.every(m=>inWindow(m.time));
+}
+
+function renderWeekly(){
+  const weekDates=getWeekDates();
+  const mon=new Date(weekDates[0]+'T12:00:00');
+  const sun=new Date(weekDates[6]+'T12:00:00');
+  document.getElementById('weekly-range').textContent=
+    mon.toLocaleDateString('en-US',{month:'long',day:'numeric'})+' – '+
+    sun.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  // Calculate metrics
+  let windowDays=0,totalMeals=0,waterDays=0;
+  let firstTimes=[],lastTimes=[];
+  weekDates.forEach(d=>{
+    const dm=meals.filter(m=>m.date===d&&m.time);
+    totalMeals+=dm.length;
+    if(dm.length){
+      const hit=dm.every(m=>inWindow(m.time));
+      if(hit)windowDays++;
+      const times=dm.map(m=>timeToHour(m.time)).sort((a,b)=>a-b);
+      firstTimes.push(times[0]);
+      lastTimes.push(times[times.length-1]);
+    }
+    if((waterData[d]||0)>=WATER_GOAL_OZ) waterDays++;
+  });
+
+  const avgFirst=firstTimes.length?firstTimes.reduce((a,b)=>a+b,0)/firstTimes.length:null;
+  const avgLast=lastTimes.length?lastTimes.reduce((a,b)=>a+b,0)/lastTimes.length:null;
+
+  function fmtHour(h){if(h===null)return'—';const hr=Math.floor(h);const min=Math.round((h-hr)*60);const ap=hr>=12?'PM':'AM';const h12=hr%12||12;return`${h12}:${String(min).padStart(2,'0')} ${ap}`;}
+
+  // Render summary cards
+  document.getElementById('weekly-stats').innerHTML=`
+    <div class="stat"><div class="stat-label">Window days</div><div class="stat-value ${windowDays>=5?'green':'amber'}">${windowDays} / 6</div></div>
+    <div class="stat"><div class="stat-label">Total meals</div><div class="stat-value">${totalMeals}</div></div>
+    <div class="stat"><div class="stat-label">Water goal days</div><div class="stat-value blue">${waterDays} / 7</div></div>`;
+  document.getElementById('weekly-stats2').innerHTML=`
+    <div class="stat"><div class="stat-label">Avg first meal</div><div class="stat-value" style="font-size:16px;">${fmtHour(avgFirst)}</div></div>
+    <div class="stat"><div class="stat-label">Avg last meal</div><div class="stat-value" style="font-size:16px;">${fmtHour(avgLast)}</div></div>`;
+
+  // Render day-by-day list
+  const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  document.getElementById('weekly-days-list').innerHTML=weekDates.map((d,i)=>{
+    const dm=meals.filter(m=>m.date===d&&m.time);
+    const hit=dayHitWindow(d);
+    const waterHit=(waterData[d]||0)>=WATER_GOAL_OZ;
+    const dateLabel=new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    let badge='';
+    if(hit===true) badge=`<span class="week-day-badge badge-hit">Window hit</span>`;
+    else if(hit===false) badge=`<span class="week-day-badge badge-miss">Missed</span>`;
+    else badge=`<span class="week-day-badge badge-none">No data</span>`;
+    const waterBadge=waterHit?`<span class="week-day-badge badge-hit" style="margin-left:4px;">Water ✓</span>`:'';
+    return`<div class="week-day-row">
+      <span class="week-day-name">${dayNames[i]}</span>
+      <span class="week-day-date">${dateLabel}</span>
+      ${badge}${waterBadge}
+      <span class="week-day-meals">${dm.length} meal${dm.length!==1?'s':''}</span>
+    </div>`;
+  }).join('');
+
+  // Render bar chart
+  if(weeklyChartInstance){weeklyChartInstance.destroy();weeklyChartInstance=null;}
+  const canvas=document.getElementById('weeklyChart');
+  const mealCounts=weekDates.map(d=>meals.filter(m=>m.date===d&&m.time).length);
+  const windowHits=weekDates.map(d=>{const h=dayHitWindow(d);return h===true?1:0;});
+  const waterHits=weekDates.map(d=>(waterData[d]||0)>=WATER_GOAL_OZ?1:0);
+  weeklyChartInstance=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels:dayNames,
+      datasets:[
+        {label:'Meals logged',data:mealCounts,backgroundColor:'rgba(29,158,117,0.7)',borderColor:'#1D9E75',borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+        {label:'Water goal',data:waterHits,backgroundColor:'rgba(26,111,196,0.25)',borderColor:'#1a6fc4',borderWidth:1,borderRadius:4,yAxisID:'y2'},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,
+          titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
+          callbacks:{
+            label:(ctx)=>{
+              if(ctx.dataset.label==='Meals logged') return` ${ctx.parsed.y} meals`;
+              return` Water goal: ${ctx.parsed.y?'Hit':'Not hit'}`;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ticks:{font:{size:11,family:'sans-serif'},color:'#4a7a9b'},grid:{display:false},border:{color:'#b8d9f0'}},
+        y:{position:'left',min:0,max:6,ticks:{stepSize:1,font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'},title:{display:true,text:'Meals',font:{size:10},color:'#4a7a9b'}},
+        y2:{position:'right',min:0,max:1,ticks:{stepSize:1,callback:(v)=>v?'Yes':'No',font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{display:false},border:{color:'#b8d9f0'},title:{display:true,text:'Goals',font:{size:10},color:'#4a7a9b'}}
+      }
+    }
+  });
+}
+
+function updateEnergyDisplay(val){
+  const el=document.getElementById('energy-display');
+  el.textContent=val;
+  const colors=['','#c24a4a','#d05a2a','#c47a00','#a08000','#7a9b00','#4a9b40','#1D9E75','#1a8a6a','#157a5a','#0f6e56'];
+  el.style.color=colors[parseInt(val)]||'var(--accent)';
+}
+
+async function saveNotes(){
+  const notes=document.getElementById('daily-notes').value.trim();
+  const energy=document.getElementById('energy-slider').value;
+  const td=today();
+  if(!notes&&energy==='5'){alert('Please add a note or adjust the energy slider before saving.');return;}
+  const btn=document.getElementById('notes-btn');
+  btn.disabled=true;btn.textContent='Saving...';
+  notesData[td]={energy:parseFloat(energy),notes};
+  try{
+    await postToSheets({action:'notes',id:'notes-'+td,date:td,energy,notes});
+    setSyncStatus('synced','Notes saved ✓');
+    loadTodayNotes();
+    if(energyChartInstance)renderEnergyChart();
+    renderNotesHistory();
+  }catch(e){
+    alert('Could not save — check your connection.');
+    setSyncStatus('error','Save failed');
+  }
+  btn.disabled=false;btn.textContent='+ Save entry';
+}
+
+function loadTodayNotes(){
+  const td=today();
+  const entry=notesData[td];
+  if(entry){
+    document.getElementById('daily-notes').value=entry.notes||'';
+    const val=Math.round(entry.energy)||5;
+    document.getElementById('energy-slider').value=val;
+    updateEnergyDisplay(val);
+  }
+}
+
+function renderNotesHistory(){
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-29);
+  const el=document.getElementById('notes-history');
+  const entries=Object.entries(notesData)
+    .filter(([d])=>new Date(d+'T12:00:00')>=cutoff)
+    .sort(([a],[b])=>b>a?1:-1);
+  if(!entries.length){el.innerHTML='<div class="empty">No notes yet — save your first entry on the Today tab.</div>';return;}
+  el.innerHTML=entries.map(([d,v])=>`
+    <div class="notes-item">
+      <div class="notes-date">
+        ${new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}
+        <span class="notes-energy-badge">Energy: ${v.energy}/10</span>
+      </div>
+      ${v.notes?`<div class="notes-text">${escHtml(v.notes)}</div>`:'<div class="notes-text" style="color:var(--muted);font-style:italic;">No notes recorded.</div>'}
+    </div>`).join('');
+}
+
+function renderEnergyChart(){
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-29);
+  const entries=Object.entries(notesData)
+    .filter(([d])=>new Date(d+'T12:00:00')>=cutoff)
+    .sort(([a],[b])=>a>b?1:-1);
+  if(energyChartInstance){energyChartInstance.destroy();energyChartInstance=null;}
+  const canvas=document.getElementById('energyChart');
+  if(!entries.length){
+    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#4a7a9b';ctx.font='13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('No energy data yet — save your first entry on the Today tab.',canvas.offsetWidth/2,120);
+    return;
+  }
+  const labels=entries.map(([d])=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+  const values=entries.map(([,v])=>v.energy);
+  const pointColors=values.map(v=>{
+    if(v>=8)return'#1D9E75';
+    if(v>=5)return'#c47a00';
+    return'#c24a4a';
+  });
+  energyChartInstance=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[{
+        label:'Energy',data:values,
+        borderColor:'#1D9E75',borderWidth:2.5,
+        pointBackgroundColor:pointColors,pointRadius:6,pointHoverRadius:8,
+        fill:true,
+        backgroundColor:'rgba(29,158,117,0.08)',
+        tension:0.3
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,
+          titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
+          callbacks:{
+            label:(ctx)=>`Energy: ${ctx.parsed.y}/10`,
+            afterLabel:(ctx)=>{
+              const entry=entries[ctx.dataIndex];
+              return entry&&entry[1].notes?`"${entry[1].notes.slice(0,60)}${entry[1].notes.length>60?'…':''}"`:'';}
+          }
+        }
+      },
+      scales:{
+        x:{ticks:{font:{size:10,family:'sans-serif'},color:'#4a7a9b',maxRotation:45},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
+        y:{min:0,max:10,ticks:{stepSize:1,font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}}
+      }
+    }
+  });
+}
+
 function renderChart(){
   const cutoff=new Date();cutoff.setDate(cutoff.getDate()-29);
   const recent=meals.filter(m=>new Date(m.date+'T12:00:00')>=cutoff);
@@ -457,18 +916,15 @@ function renderChart(){
   if(chartInstance){chartInstance.destroy();chartInstance=null;}
   const canvas=document.getElementById('fastChart');
   if(!days.length){
-    const ctx=canvas.getContext('2d');
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#4a7a9b';ctx.font='13px sans-serif';
-    ctx.textAlign='center';ctx.fillText('No data yet — sync or log a meal to see the chart.',canvas.offsetWidth/2,120);
-    return;
+    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#4a7a9b';ctx.font='13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('No data yet — sync or log a meal to see the chart.',canvas.offsetWidth/2,120);return;
   }
   const inData=[];const outData=[];
   days.forEach((d,i)=>{
     meals.filter(m=>m.date===d).forEach(m=>{
       const h=parseFloat(timeToHour(m.time).toFixed(2));
-      if(inWindow(m.time))inData.push({x:i,y:h});
-      else outData.push({x:i,y:h});
+      if(inWindow(m.time))inData.push({x:i,y:h});else outData.push({x:i,y:h});
     });
   });
   const labels=days.map(d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
@@ -482,17 +938,8 @@ function renderChart(){
     ]},
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,
-          titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
-          callbacks:{
-            title:(items)=>{const i=items[0];return labels[i.parsed.x]||'';},
-            label:(ctx)=>{const h=ctx.parsed.y;const hr=Math.floor(h);const min=Math.round((h-hr)*60);const ap=hr>=12?'PM':'AM';const h12=hr%12||12;return ` ${h12}:${String(min).padStart(2,'0')} ${ap}`;}
-          }
-        }
-      },
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#ffffff',borderColor:'#b8d9f0',borderWidth:1,titleColor:'#4a7a9b',bodyColor:'#0d2a4a',padding:10,
+        callbacks:{title:(items)=>labels[items[0].parsed.x]||'',label:(ctx)=>{const h=ctx.parsed.y;const hr=Math.floor(h);const min=Math.round((h-hr)*60);const ap=hr>=12?'PM':'AM';const h12=hr%12||12;return` ${h12}:${String(min).padStart(2,'0')} ${ap}`;}}}},
       scales:{
         x:{type:'linear',min:-0.5,max:days.length-0.5,ticks:{stepSize:1,callback:(v)=>labels[Math.round(v)]||'',maxRotation:50,font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}},
         y:{min:0,max:24,ticks:{stepSize:2,callback:(v)=>{const h=v%12||12;const ap=v>=12?'PM':'AM';return`${h}${ap}`;},font:{size:10,family:'sans-serif'},color:'#4a7a9b'},grid:{color:'rgba(0,0,0,0.06)'},border:{color:'#b8d9f0'}}
@@ -504,8 +951,8 @@ function renderChart(){
 const now=new Date();
 document.getElementById('meal-time').value=now.toTimeString().slice(0,5);
 document.getElementById('meal-date').value=today();
-renderToday();
-updateStats();
+updateEnergyDisplay(5);
+renderToday();updateStats();
 setInterval(renderToday,60000);
 syncFromSheets();
 </script>

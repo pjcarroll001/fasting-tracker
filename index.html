@@ -242,9 +242,7 @@ async function syncFromSheets(){
     meals.sort((a,b)=>a.date+a.time>b.date+b.time?1:-1);
     const now=new Date();
     setSyncStatus('synced','Synced · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}));
-    renderToday();updateStats();
-    if(document.getElementById('tab-log').classList.contains('active'))renderAllLog();
-    if(chartInstance||document.getElementById('tab-chart').classList.contains('active'))renderChart();
+    renderToday();updateStats();renderAllLog();renderGoals();setTimeout(renderChart,100);
   }catch(e){
     setSyncStatus('error','Sync failed — check connection');
   }
